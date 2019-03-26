@@ -45,7 +45,6 @@ public class GameService {
     protected Optional<Player> checkStraightSequences(Board board) {
         Optional<Player>[][] boardState = board.getBoard();
         List<List<Optional<Player>>> straightSequences = new ArrayList<>(boardState.length);
-        List<List<Optional<Player>>> columnsSequences = new ArrayList<>(boardState.length);
         for (int column = 0; column < boardState.length; column++) {
             List<Optional<Player>> rowSequence = new ArrayList<>(boardState.length);
             List<Optional<Player>> columnSequence = new ArrayList<>(boardState.length);

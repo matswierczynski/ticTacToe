@@ -48,7 +48,6 @@ public class GameServiceTest {
         //given
         Player winner;
         Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
 
         // when
         winner = gameService.checkState(board);
