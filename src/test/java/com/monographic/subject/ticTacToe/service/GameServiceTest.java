@@ -1,6 +1,7 @@
 package com.monographic.subject.ticTacToe.service;
 
 import com.monographic.subject.ticTacToe.entity.Board;
+import com.monographic.subject.ticTacToe.entity.BoardDTO;
 import com.monographic.subject.ticTacToe.entity.Player;
 import exception.BusyPositionException;
 import org.junit.Before;
@@ -18,7 +19,8 @@ public class GameServiceTest {
     @Before
     public void setUp() {
         Board board = new Board();
-        gameService = new GameService(board);
+        BoardDTO boardDTO = new BoardDTO();
+        gameService = new GameService(board, boardDTO);
         MockitoAnnotations.initMocks(this);
     }
 

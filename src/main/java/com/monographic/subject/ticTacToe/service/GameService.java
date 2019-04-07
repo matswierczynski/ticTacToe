@@ -1,6 +1,8 @@
 package com.monographic.subject.ticTacToe.service;
 
 import com.monographic.subject.ticTacToe.entity.Board;
+import com.monographic.subject.ticTacToe.entity.BoardDTO;
+import com.monographic.subject.ticTacToe.entity.MoveDTO;
 import com.monographic.subject.ticTacToe.entity.Player;
 import exception.BusyPositionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +16,42 @@ import java.util.Optional;
 public class GameService {
     private int MARKS_TO_WIN = 5;
     private final Board board;
+    private final BoardDTO boardDTO;
 
     @Autowired
-    public GameService(Board board) {
+    public GameService(Board board, BoardDTO boardDTO) {
         this.board = board;
+        this.boardDTO = boardDTO;
+    }
+
+    public BoardDTO prepareNewGame(int size) {
+        Board newBoard = startNewGame(size);
+        Optional<Player>[][] newBoardState = newBoard.getBoard();
+        String[][] newTransferBoard = transformOptionalsArrayyToPrimitives(newBoardState);
+        boardDTO.setBoard(newTransferBoard);
+        return boardDTO;
     }
 
     public Board startNewGame(int size) {
         board.init(size);
         return board;
+    }
+
+    public BoardDTO move(MoveDTO moveDTO) {
+        Optional<Player>[][] transformedBoardState = transformPrimitivesArrayToOptionals(moveDTO.getBoard());
+        Player player = Player.valueOf(moveDTO.getPlayer());
+        this.board.setBoard(transformedBoardState);
+        Board board = makeMove(this.board, player, moveDTO.getxCoord(), moveDTO.getyCoord());
+        this.boardDTO.setBoard(transformOptionalsArrayyToPrimitives(board.getBoard()));
+        return boardDTO;
+    }
+
+    public BoardDTO check(BoardDTO boardDTO) {
+        this.board.setBoard(transformPrimitivesArrayToOptionals(boardDTO.getBoard()));
+        Player winner = checkState(this.board);
+        if (winner != null)
+            boardDTO.setWinnner(winner.name());
+        return boardDTO;
     }
 
     public Player checkState(Board board) {
@@ -120,5 +149,29 @@ public class GameService {
             }
         }
         return Optional.empty();
+    }
+
+    private Optional<Player>[][] transformPrimitivesArrayToOptionals(String[][] boardState) {
+        int length = boardState.length;
+        Optional<Player>[][] transformedBoardState = new Optional[length][length];
+        for (int row = 0; row < length; row++) {
+            for (int column = 0; column < length; column++) {
+                transformedBoardState[column][row] = boardState[column][row].equals(" ") ?
+                        Optional.empty() : Optional.of(Player.valueOf(boardState[column][row]));
+            }
+        }
+        return transformedBoardState;
+    }
+
+    private String[][] transformOptionalsArrayyToPrimitives(Optional<Player>[][] boardState) {
+        int length = boardState.length;
+        String[][] transformedBoardState = new String[length][length];
+        for (int row = 0; row < length; row++) {
+            for (int column = 0; column < length; column++) {
+                transformedBoardState[column][row] = boardState[column][row].isPresent() ?
+                        boardState[column][row].get().name() : " ";
+            }
+        }
+        return transformedBoardState;
     }
 }
