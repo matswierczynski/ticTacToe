@@ -28,6 +28,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testCompile 'org.mockito:mockito-all:1.8.4'
+	testCompile 'org.mockito:mockito-all:1.10.19'
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	compile 'com.h2database:h2:1.4.199'
 }

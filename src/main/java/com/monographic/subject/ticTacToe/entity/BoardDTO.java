@@ -12,12 +12,12 @@ public class BoardDTO {
         return board;
     }
 
-    public String getWinnner() {
+    public String getWinner() {
         return winner;
     }
 
-    public void setWinnner(String winnner) {
-        this.winner = winnner;
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 
     public void setBoard(String[][] board) {

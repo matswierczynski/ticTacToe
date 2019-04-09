@@ -50,7 +50,7 @@ public class GameService {
         this.board.setBoard(transformPrimitivesArrayToOptionals(boardDTO.getBoard()));
         Player winner = checkState(this.board);
         if (winner != null)
-            boardDTO.setWinnner(winner.name());
+            boardDTO.setWinner(winner.name());
         return boardDTO;
     }
 
