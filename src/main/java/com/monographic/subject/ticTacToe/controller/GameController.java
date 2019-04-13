@@ -2,6 +2,7 @@ package com.monographic.subject.ticTacToe.controller;
 
 import com.monographic.subject.ticTacToe.entity.BoardDTO;
 import com.monographic.subject.ticTacToe.entity.MoveDTO;
+import com.monographic.subject.ticTacToe.entity.PlayerDTO;
 import com.monographic.subject.ticTacToe.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,20 +22,35 @@ public class GameController {
     }
 
     @RequestMapping(
-            value = "/move",
+            value = "/move/{gameNo}",
             method = RequestMethod.POST,
             consumes = "application/json",
             produces = "application/json")
-    public BoardDTO makeMove(@RequestBody MoveDTO moveDTO) {
-        return gameService.move(moveDTO);
+    public BoardDTO makeMove(@RequestBody MoveDTO moveDTO, @PathVariable long gameNo) {
+        return gameService.move(moveDTO, gameNo);
     }
 
     @RequestMapping(
-            value = "/checkState",
-            method = RequestMethod.POST,
-            consumes = "application/json",
+            value = "/checkState/{gameNo}",
+            method = RequestMethod.GET,
             produces = "application/json")
-    public BoardDTO checkState(@RequestBody BoardDTO boardDTO) {
-        return gameService.check(boardDTO);
+    public BoardDTO checkState(@PathVariable long gameNo) {
+        return gameService.check(gameNo);
+    }
+
+    @RequestMapping(
+            value = "/player/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public String getPlayer(@PathVariable long id) {
+        return gameService.getPlayer(id);
+    }
+
+    @RequestMapping(
+            value = "/player/{id}/statistics",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public PlayerDTO getPlayerStatistics(@PathVariable long id) {
+        return gameService.getPlayerStatistics(id);
     }
 }

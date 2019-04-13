@@ -3,10 +3,16 @@ package com.monographic.subject.ticTacToe.service;
 import com.monographic.subject.ticTacToe.entity.Board;
 import com.monographic.subject.ticTacToe.entity.BoardDTO;
 import com.monographic.subject.ticTacToe.entity.Player;
-import exception.BusyPositionException;
+import com.monographic.subject.ticTacToe.repository.BoardRepo;
+import com.monographic.subject.ticTacToe.repository.FieldRepo;
+import com.monographic.subject.ticTacToe.repository.PlayerEntityRepo;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
@@ -14,13 +20,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GameServiceTest {
 
+    @InjectMocks
     private GameService gameService;
+
+    @Spy
+    @Autowired
+    BoardDTO boardDTO;
+
+    @Spy
+    Board board;
+
+    @Mock
+    BoardRepo boardRepo;
+
+    @Mock
+    FieldRepo fieldRepo;
+
+    @Mock
+    PlayerEntityRepo playerEntityRepo;
 
     @Before
     public void setUp() {
-        Board board = new Board();
-        BoardDTO boardDTO = new BoardDTO();
-        gameService = new GameService(board, boardDTO);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -379,38 +399,5 @@ public class GameServiceTest {
 
         assertThat(winner).isPresent();
         assertThat(winner.get()).isEqualTo(Player.PLAYER1);
-    }
-
-    @Test
-    public void shouldMakeMove() {
-        //given
-        Board board = gameService.startNewGame(10);
-
-        // when
-        gameService.makeMove(board, Player.PLAYER1, 6, 1);
-
-        // then
-        assertThat(board.getBoard()).isNotNull();
-        assertThat((board.getBoard())[6][1]).isPresent();
-        assertThat(((board.getBoard())[6][1]).get()).isEqualTo(Player.PLAYER1);
-    }
-
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
-    public void shouldThrowExceptionWhenCoordinatesBeyondArray() {
-        //given
-        Board board = gameService.startNewGame(10);
-
-        // when & then
-        gameService.makeMove(board, Player.PLAYER1, 1, 10);
-    }
-
-    @Test(expected = BusyPositionException.class)
-    public void shouldThrowExceptionWhenPositionIsAlreadyMarked() {
-        //given
-        Board board = gameService.startNewGame(10);
-
-        // when & then
-        gameService.makeMove(board, Player.PLAYER1, 1, 1);
-        gameService.makeMove(board, Player.PLAYER2, 1, 1);
     }
 }

@@ -1,0 +1,1 @@
+UPDATE field SET fk_player = 1 WHERE x_coord=0 AND y_coord=0;

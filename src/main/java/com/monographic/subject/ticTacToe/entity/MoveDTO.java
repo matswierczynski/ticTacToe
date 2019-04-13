@@ -1,18 +1,9 @@
 package com.monographic.subject.ticTacToe.entity;
 
 public class MoveDTO {
-    private String[][] board;
     private String player;
     private int xCoord;
     private int yCoord;
-
-    public String[][] getBoard() {
-        return board;
-    }
-
-    public void setBoard(String[][] board) {
-        this.board = board;
-    }
 
     public String getPlayer() {
         return player;
