@@ -18,6 +18,10 @@ public class PlayerBE {
 
     private int drawnGames;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_personal_data")
+    private PersonalDataBE personalData;
+
     public PlayerBE() {
     }
 
@@ -64,5 +68,13 @@ public class PlayerBE {
 
     public void setDrawnGames(int drawnGames) {
         this.drawnGames = drawnGames;
+    }
+
+    public PersonalDataBE getPersonalData() {
+        return personalData;
+    }
+
+    public void setPersonalData(PersonalDataBE personalData) {
+        this.personalData = personalData;
     }
 }

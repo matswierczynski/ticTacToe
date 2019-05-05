@@ -12,7 +12,7 @@ public class FieldBE {
     private int xCoord;
     private int yCoord;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_player")
     private PlayerBE player;
 

@@ -3,15 +3,14 @@ package com.monographic.subject.ticTacToe.service;
 import com.monographic.subject.ticTacToe.entity.*;
 import com.monographic.subject.ticTacToe.repository.BoardRepo;
 import com.monographic.subject.ticTacToe.repository.FieldRepo;
+import com.monographic.subject.ticTacToe.repository.PersonalDataRepo;
 import com.monographic.subject.ticTacToe.repository.PlayerEntityRepo;
 import exception.BusyPositionException;
+import exception.DrawException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GameService {
@@ -32,12 +31,15 @@ public class GameService {
     @Autowired
     private PlayerEntityRepo playerEntityRepo;
 
+    @Autowired
+    private PersonalDataRepo personalDataRepo;
+
     public BoardDTO prepareNewGame(int size) {
         Board newBoard = startNewGame(size);
         Optional<Player>[][] newBoardState = newBoard.getBoard();
         String[][] newTransferBoard = transformOptionalsArrayToPrimitives(newBoardState);
         boardDTO.setBoard(newTransferBoard);
-        boardDTO.setWinner("");
+        boardDTO.setWinner(null);
         return boardDTO;
     }
 
@@ -68,7 +70,7 @@ public class GameService {
                     singleField.setPlayer(player.get());
                     fieldRepo.save(singleField);
                     boardDTO.setBoard(transformBoardBeToPrimitive(fields));
-                    boardDTO.setWinner("");
+                    boardDTO.setWinner(null);
                 });
             });
             return boardDTO;
@@ -76,12 +78,39 @@ public class GameService {
     }
 
     public BoardDTO check(long gameNo) {
+        boardDTO.setBoard(null);
+        boardDTO.setWinner(null);
         Optional<List<FieldBE>> fields = Optional.ofNullable(fieldRepo.findByBoardId(gameNo));
         String[][] fieldsOfGame = transformBoardBeToPrimitive(fields);
         this.board.setBoard(transformPrimitivesArrayToOptionals(fieldsOfGame));
         Player winner = checkState(this.board);
-        if (winner != null)
+        if (winner != null) {
+            Optional<PlayerBE> looser = playerEntityRepo.findAll()
+                    .stream()
+                    .filter(player -> !player.getPlayer().name().equals(winner.name()))
+                    .findFirst();
+            PlayerBE winnerBE = playerEntityRepo.findByPlayer(winner);
+            PlayerBE looserBE = looser.get();
+            int wonGames = winnerBE.getWonGames();
+            int lostGames = looserBE.getLostGames();
+            winnerBE.setWonGames(++wonGames);
+            looserBE.setLostGames(++lostGames);
+            playerEntityRepo.save(winnerBE);
+            playerEntityRepo.save(looserBE);
             boardDTO.setWinner(winner.name());
+        } else {
+            try {
+                checkDraw(this.board);
+            } catch (DrawException de) {
+                List<PlayerBE> players = playerEntityRepo.findAll();
+                for (PlayerBE player : players) {
+                    int drawnGames = player.getDrawnGames();
+                    player.setDrawnGames(++drawnGames);
+                    playerEntityRepo.save(player);
+                }
+                boardDTO.setWinner("draw");
+            }
+        }
         return boardDTO;
     }
 
@@ -109,6 +138,42 @@ public class GameService {
         Optional<Player> diagonalWinning = checkDiagonalsSequences(board);
         return straightWinning.isPresent() ? straightWinning.get() :
                 diagonalWinning.isPresent() ? diagonalWinning.get() : null;
+    }
+
+    public void checkDraw(Board board) {
+        Optional<Player>[][] boardState = board.getBoard();
+        List<Optional<Player>> stateList = new ArrayList<>();
+        for (Optional<Player>[] row : boardState) {
+            stateList.addAll(Arrays.asList(row));
+        }
+        if (stateList.stream().allMatch(Optional::isPresent)) {
+            throw new DrawException();
+        }
+
+    }
+
+    public PersonalDataDTO getPlayerInfo(long id) {
+        Optional<PersonalDataBE> playerInfo = Optional.ofNullable(personalDataRepo.findFirstByPlayerId(id));
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO();
+        playerInfo.ifPresent(info -> {
+            personalDataDTO.setPlayer(info.getPlayer().getPlayer().name());
+            personalDataDTO.setName(info.getName());
+            personalDataDTO.setSurname(info.getSurname());
+            personalDataDTO.setEmail(info.getEmail());
+        });
+        return personalDataDTO;
+    }
+
+    public PersonalDataDTO setPlayerInfo(PersonalDataDTO playerInfo, long id) {
+        Optional<PlayerBE> player = playerEntityRepo.findById(id);
+        player.ifPresent(p -> {
+            PersonalDataBE personalData = p.getPersonalData();
+            personalData.setName(playerInfo.getName());
+            personalData.setSurname(playerInfo.getSurname());
+            personalData.setEmail(playerInfo.getEmail());
+            personalDataRepo.save(personalData);
+        });
+        return playerInfo;
     }
 
     Optional<Player> checkStraightSequences(Board board) {
@@ -246,4 +311,5 @@ public class GameService {
         } else
             throw new NoSuchElementException();
     }
+
 }

@@ -1,43 +1,37 @@
 package com.monographic.subject.ticTacToe.service;
 
-import com.monographic.subject.ticTacToe.entity.Board;
-import com.monographic.subject.ticTacToe.entity.BoardDTO;
-import com.monographic.subject.ticTacToe.entity.Player;
-import com.monographic.subject.ticTacToe.repository.BoardRepo;
+import com.monographic.subject.ticTacToe.entity.*;
 import com.monographic.subject.ticTacToe.repository.FieldRepo;
 import com.monographic.subject.ticTacToe.repository.PlayerEntityRepo;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class GameServiceTest {
+    private static final MoveDTO MOVE_DTO_1 = new MoveDTO();
+    private static final BoardDTO BOARD_DTO = new BoardDTO();
 
     @InjectMocks
     private GameService gameService;
 
-    @Spy
-    @Autowired
-    BoardDTO boardDTO;
-
-    @Spy
-    Board board;
-
     @Mock
-    BoardRepo boardRepo;
+    PlayerEntityRepo playerEntityRepo;
 
     @Mock
     FieldRepo fieldRepo;
 
-    @Mock
-    PlayerEntityRepo playerEntityRepo;
+    @Spy
+    BoardDTO boardDTO;
 
     @Before
     public void setUp() {
@@ -45,359 +39,43 @@ public class GameServiceTest {
     }
 
     @Test
-    public void shouldReturnPlayer() {
-        //given
-        Player winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[1][3] = Optional.of(Player.PLAYER1);
-        currentState[1][4] = Optional.of(Player.PLAYER1);
-        currentState[1][5] = Optional.of(Player.PLAYER1);
-        currentState[1][6] = Optional.of(Player.PLAYER1);
-        currentState[1][7] = Optional.of(Player.PLAYER1);
-
-        // when
-        winner = gameService.checkState(board);
-
-        // then
-        assertThat(winner).isNotNull();
-        assertThat(winner).isEqualTo(Player.PLAYER1);
-
-    }
-
-    @Test
-    public void shouldNotReturnPlayer() {
-        //given
-        Player winner;
-        Board board = gameService.startNewGame(10);
-
-        // when
-        winner = gameService.checkState(board);
-
-        // then
-        assertThat(winner).isNull();
-    }
-
-
-    @Test
-    public void shouldFindWinnerInColumn() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[1][3] = Optional.of(Player.PLAYER1);
-        currentState[1][4] = Optional.of(Player.PLAYER1);
-        currentState[1][5] = Optional.of(Player.PLAYER1);
-        currentState[1][6] = Optional.of(Player.PLAYER1);
-        currentState[1][7] = Optional.of(Player.PLAYER1);
-
-        // when
-        winner = gameService.checkStraightSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER1);
-    }
-
-    @Test
-    public void shouldNotFindWinnerInColumnWhenMarksAreNotInOrder() {
+    public void shouldMakeMove() {
         // given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[2][0] = Optional.of(Player.PLAYER1);
-        currentState[2][1] = Optional.of(Player.PLAYER2);
-        currentState[2][2] = Optional.of(Player.PLAYER1);
-        currentState[2][3] = Optional.of(Player.PLAYER1);
-        currentState[2][4] = Optional.of(Player.PLAYER1);
-        currentState[2][5] = Optional.of(Player.PLAYER1);
-        currentState[2][7] = Optional.of(Player.PLAYER1);
-        currentState[2][9] = Optional.of(Player.PLAYER1);
+        MOVE_DTO_1.setPlayer("PLAYER1");
+        MOVE_DTO_1.setxCoord(0);
+        MOVE_DTO_1.setyCoord(0);
 
-        //when
-        winner = gameService.checkStraightSequences(board);
+        List<FieldBE> fields = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            fields.add(i, new FieldBE(i % 10, i / 10, null, null));
+        }
 
-        // then
-        assertThat(winner).isEmpty();
-    }
-
-    @Test
-    public void shouldFindWinnerInRow() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[5][5] = Optional.of(Player.PLAYER1);
-        currentState[6][5] = Optional.of(Player.PLAYER1);
-        currentState[7][5] = Optional.of(Player.PLAYER1);
-        currentState[8][5] = Optional.of(Player.PLAYER1);
-        currentState[9][5] = Optional.of(Player.PLAYER1);
-
-        //when
-        winner = gameService.checkStraightSequences(board);
-
-        //then
-        assertThat(winner).isNotEmpty();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER1);
-    }
-
-    @Test
-    public void shouldNotFindWinnerInRowWhenMarksNotInOrder() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[5][1] = Optional.of(Player.PLAYER1);
-        currentState[5][2] = Optional.of(Player.PLAYER1);
-        currentState[5][3] = Optional.of(Player.PLAYER1);
-        currentState[5][4] = Optional.of(Player.PLAYER1);
-        currentState[6][6] = Optional.of(Player.PLAYER2);
-        currentState[7][7] = Optional.of(Player.PLAYER1);
-        currentState[8][8] = Optional.of(Player.PLAYER1);
-        currentState[9][9] = Optional.of(Player.PLAYER1);
+        String[][] newBoard = generateEmptyBoard();
+        newBoard[0][0] = "PLAYER1";
+        BOARD_DTO.setBoard(newBoard);
+        Mockito.when(playerEntityRepo.findByPlayer(Mockito.any()))
+                .thenReturn(new PlayerBE(1l, Player.PLAYER1));
+        Mockito.when(fieldRepo.findByBoardId(Mockito.anyLong()))
+                .thenReturn(fields);
 
         // when
-        winner = gameService.checkStraightSequences(board);
+        BoardDTO board = gameService.move(MOVE_DTO_1, 1l);
 
         // then
-        assertThat(winner).isEmpty();
+        assertThat(board.getBoard().length).isEqualTo(10);
+        for (int row = 0; row < 10; row++) {
+            assertThat(board.getBoard()[row]).containsExactly(newBoard[row]);
+        }
     }
 
-    @Test
-    public void shouldFindOnlyOneWinner() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[1][1] = Optional.of(Player.PLAYER2);
-        currentState[1][2] = Optional.of(Player.PLAYER2);
-        currentState[1][3] = Optional.of(Player.PLAYER2);
-        currentState[1][4] = Optional.of(Player.PLAYER2);
-        currentState[1][5] = Optional.of(Player.PLAYER2);
-        currentState[5][1] = Optional.of(Player.PLAYER1);
-        currentState[5][2] = Optional.of(Player.PLAYER1);
-        currentState[5][3] = Optional.of(Player.PLAYER1);
-        currentState[5][4] = Optional.of(Player.PLAYER1);
-        currentState[5][5] = Optional.of(Player.PLAYER1);
-        currentState[5][6] = Optional.of(Player.PLAYER1);
-        currentState[5][7] = Optional.of(Player.PLAYER1);
-
-        // when
-        winner = gameService.checkStraightSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER2);
-
+    private String[][] generateEmptyBoard() {
+        String[][] board = new String[10][10];
+        for (int row = 0; row < 10; row++) {
+            for (int column = 0; column < 10; column++) {
+                board[column][row] = " ";
+            }
+        }
+        return board;
     }
 
-    @Test
-    public void shouldFindWinnerInWestSouthDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[0][4] = Optional.of(Player.PLAYER2);
-        currentState[1][5] = Optional.of(Player.PLAYER2);
-        currentState[2][6] = Optional.of(Player.PLAYER2);
-        currentState[3][7] = Optional.of(Player.PLAYER2);
-        currentState[4][8] = Optional.of(Player.PLAYER2);
-        currentState[5][9] = Optional.of(Player.PLAYER1);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER2);
-    }
-
-    @Test
-    public void shouldNotFindWinnerInWestSouthDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[0][4] = Optional.of(Player.PLAYER2);
-        currentState[1][5] = Optional.of(Player.PLAYER1);
-        currentState[2][6] = Optional.of(Player.PLAYER2);
-        currentState[3][7] = Optional.of(Player.PLAYER2);
-        currentState[4][8] = Optional.of(Player.PLAYER2);
-        currentState[5][9] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isEmpty();
-    }
-
-    @Test
-    public void shouldFindWinnerInNorthEastDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[5][0] = Optional.of(Player.PLAYER2);
-        currentState[6][1] = Optional.of(Player.PLAYER2);
-        currentState[7][2] = Optional.of(Player.PLAYER2);
-        currentState[8][3] = Optional.of(Player.PLAYER2);
-        currentState[9][4] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER2);
-    }
-
-    @Test
-    public void shouldNotFindWinnerInNorthEastDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[2][3] = Optional.of(Player.PLAYER2);
-        currentState[3][4] = Optional.of(Player.PLAYER2);
-        currentState[4][5] = Optional.of(Player.PLAYER1);
-        currentState[5][6] = Optional.of(Player.PLAYER2);
-        currentState[6][7] = Optional.of(Player.PLAYER2);
-        currentState[7][8] = Optional.of(Player.PLAYER2);
-        currentState[8][9] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isEmpty();
-    }
-
-
-    @Test
-    public void shouldFindWinnerInWestNorthDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[1][7] = Optional.of(Player.PLAYER2);
-        currentState[2][6] = Optional.of(Player.PLAYER2);
-        currentState[3][5] = Optional.of(Player.PLAYER2);
-        currentState[4][4] = Optional.of(Player.PLAYER2);
-        currentState[5][3] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER2);
-    }
-
-    @Test
-    public void shouldNotFindWinnerInWestNorthDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[1][7] = Optional.of(Player.PLAYER2);
-        currentState[2][6] = Optional.of(Player.PLAYER2);
-        currentState[3][5] = Optional.of(Player.PLAYER2);
-        currentState[4][4] = Optional.of(Player.PLAYER2);
-        currentState[5][3] = Optional.of(Player.PLAYER1);
-        currentState[6][2] = Optional.of(Player.PLAYER2);
-        currentState[7][1] = Optional.of(Player.PLAYER2);
-        currentState[8][0] = Optional.of(Player.PLAYER1);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isEmpty();
-    }
-
-    @Test
-    public void shouldFindWinnerInSouthEastDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[4][8] = Optional.of(Player.PLAYER2);
-        currentState[5][7] = Optional.of(Player.PLAYER2);
-        currentState[6][6] = Optional.of(Player.PLAYER2);
-        currentState[7][5] = Optional.of(Player.PLAYER2);
-        currentState[8][4] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER2);
-    }
-
-    @Test
-    public void shouldNotFindWinnerInSouthEastDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[4][7] = Optional.of(Player.PLAYER2);
-        currentState[5][6] = Optional.of(Player.PLAYER2);
-        currentState[6][5] = Optional.of(Player.PLAYER1);
-        currentState[7][4] = Optional.of(Player.PLAYER2);
-        currentState[8][3] = Optional.of(Player.PLAYER2);
-        currentState[9][2] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isEmpty();
-    }
-
-    @Test
-    public void shouldFindWinnerOnFirstMainDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[2][2] = Optional.of(Player.PLAYER2);
-        currentState[3][3] = Optional.of(Player.PLAYER2);
-        currentState[4][4] = Optional.of(Player.PLAYER2);
-        currentState[5][5] = Optional.of(Player.PLAYER2);
-        currentState[6][6] = Optional.of(Player.PLAYER2);
-        currentState[7][7] = Optional.of(Player.PLAYER2);
-        currentState[8][8] = Optional.of(Player.PLAYER2);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER2);
-    }
-
-    @Test
-    public void shouldFindWinnerOnSecondMainDiagonal() {
-        //given
-        Optional<Player> winner;
-        Board board = gameService.startNewGame(10);
-        Optional<Player>[][] currentState = board.getBoard();
-        currentState[0][9] = Optional.of(Player.PLAYER1);
-        currentState[1][8] = Optional.of(Player.PLAYER1);
-        currentState[2][7] = Optional.of(Player.PLAYER1);
-        currentState[3][6] = Optional.of(Player.PLAYER1);
-        currentState[4][5] = Optional.of(Player.PLAYER1);
-        currentState[5][4] = Optional.of(Player.PLAYER1);
-        currentState[6][3] = Optional.of(Player.PLAYER1);
-
-        // when
-        winner = gameService.checkDiagonalsSequences(board);
-
-        // then
-
-        assertThat(winner).isPresent();
-        assertThat(winner.get()).isEqualTo(Player.PLAYER1);
-    }
 }

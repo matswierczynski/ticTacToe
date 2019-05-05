@@ -2,6 +2,7 @@ package com.monographic.subject.ticTacToe.controller;
 
 import com.monographic.subject.ticTacToe.entity.BoardDTO;
 import com.monographic.subject.ticTacToe.entity.MoveDTO;
+import com.monographic.subject.ticTacToe.entity.PersonalDataDTO;
 import com.monographic.subject.ticTacToe.entity.PlayerDTO;
 import com.monographic.subject.ticTacToe.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,21 @@ public class GameController {
             produces = "application/json")
     public PlayerDTO getPlayerStatistics(@PathVariable long id) {
         return gameService.getPlayerStatistics(id);
+    }
+
+    @RequestMapping(
+            value = "player/{id}/info",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public PersonalDataDTO getPlayerInfo(@PathVariable long id) {
+        return gameService.getPlayerInfo(id);
+    }
+
+    @RequestMapping(
+            value = "player/{id}/edit",
+            method = RequestMethod.PUT,
+            produces = "application/json")
+    public PersonalDataDTO setPlayerInfo(@RequestBody PersonalDataDTO playerInfo, @PathVariable long id) {
+        return gameService.setPlayerInfo(playerInfo, id);
     }
 }
