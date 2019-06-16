@@ -1,6 +1,6 @@
 package com.monographic.subject.ticTacToe.repository;
 
-import com.monographic.subject.ticTacToe.entity.FieldBE;
+import com.monographic.subject.ticTacToe.model.entity.FieldBE;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

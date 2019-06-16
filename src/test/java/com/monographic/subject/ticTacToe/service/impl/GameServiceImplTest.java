@@ -1,8 +1,8 @@
-package com.monographic.subject.ticTacToe.service;
+package com.monographic.subject.ticTacToe.service.impl;
 
-import com.monographic.subject.ticTacToe.entity.Board;
-import com.monographic.subject.ticTacToe.entity.BoardDTO;
-import com.monographic.subject.ticTacToe.entity.Player;
+import com.monographic.subject.ticTacToe.model.dto.BoardDTO;
+import com.monographic.subject.ticTacToe.model.entity.Board;
+import com.monographic.subject.ticTacToe.model.entity.Player;
 import com.monographic.subject.ticTacToe.repository.BoardRepo;
 import com.monographic.subject.ticTacToe.repository.FieldRepo;
 import com.monographic.subject.ticTacToe.repository.PlayerEntityRepo;
@@ -18,10 +18,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GameServiceIT {
+public class GameServiceImplTest {
 
     @InjectMocks
-    private GameService gameService;
+    private GameServiceImpl gameService;
 
     @Spy
     @Autowired
@@ -396,7 +396,6 @@ public class GameServiceIT {
         winner = gameService.checkDiagonalsSequences(board);
 
         // then
-
         assertThat(winner).isPresent();
         assertThat(winner.get()).isEqualTo(Player.PLAYER1);
     }

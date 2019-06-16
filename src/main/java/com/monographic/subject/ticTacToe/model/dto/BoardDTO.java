@@ -1,4 +1,4 @@
-package com.monographic.subject.ticTacToe.entity;
+package com.monographic.subject.ticTacToe.model.dto;
 
 import org.springframework.stereotype.Component;
 

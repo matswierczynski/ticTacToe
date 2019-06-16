@@ -1,4 +1,4 @@
-package com.monographic.subject.ticTacToe.controller;
+package com.monographic.subject.ticTacToe.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
