@@ -1,5 +1,9 @@
 package com.monographic.subject.ticTacToe.service.impl;
 
+import com.monographic.subject.ticTacToe.error.BusyPositionException;
+import com.monographic.subject.ticTacToe.error.NoSuchBoardException;
+import com.monographic.subject.ticTacToe.error.NoSuchFieldException;
+import com.monographic.subject.ticTacToe.error.NoSuchPlayerException;
 import com.monographic.subject.ticTacToe.model.dto.BoardDTO;
 import com.monographic.subject.ticTacToe.model.dto.MoveDTO;
 import com.monographic.subject.ticTacToe.model.dto.PersonalDataDTO;
@@ -10,10 +14,6 @@ import com.monographic.subject.ticTacToe.repository.FieldRepo;
 import com.monographic.subject.ticTacToe.repository.PersonalDataRepo;
 import com.monographic.subject.ticTacToe.repository.PlayerEntityRepo;
 import com.monographic.subject.ticTacToe.service.GameService;
-import error.BusyPositionException;
-import error.NoSuchBoardException;
-import error.NoSuchFieldException;
-import error.NoSuchPlayerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

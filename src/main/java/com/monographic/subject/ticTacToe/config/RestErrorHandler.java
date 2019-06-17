@@ -1,8 +1,8 @@
 package com.monographic.subject.ticTacToe.config;
 
-import error.BusyPositionException;
-import error.NoSuchBoardException;
-import error.NoSuchPlayerException;
+import com.monographic.subject.ticTacToe.error.BusyPositionException;
+import com.monographic.subject.ticTacToe.error.NoSuchBoardException;
+import com.monographic.subject.ticTacToe.error.NoSuchPlayerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
