@@ -18,10 +18,25 @@ public class Board {
     }
 
     public Optional<Player>[][] getBoard() {
-        return board;
+        if (board != null) {
+            Optional<Player>[][] copiedBoard = this.board.clone();
+            for (int i = 0; i < copiedBoard.length; i++) {
+                copiedBoard[i] = copiedBoard[i].clone();
+            }
+            return copiedBoard;
+        } else {
+            return null;
+        }
     }
 
     public void setBoard(Optional<Player>[][] board) {
-        this.board = board;
+        if (board != null) {
+            this.board = board.clone();
+            for (int i = 0; i < this.board.length; i++) {
+                this.board[i] = this.board[i].clone();
+            }
+        } else {
+            this.board = null;
+        }
     }
 }

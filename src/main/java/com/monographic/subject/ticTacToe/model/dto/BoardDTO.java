@@ -6,10 +6,19 @@ import org.springframework.stereotype.Component;
 public class BoardDTO {
 
     private String[][] board;
+
     private String winner;
 
     public String[][] getBoard() {
-        return board;
+        if (this.board != null) {
+            String[][] copiedBoard = this.board.clone();
+            for (int i = 0; i < copiedBoard.length; i++) {
+                copiedBoard[i] = copiedBoard[i].clone();
+            }
+            return copiedBoard;
+        } else {
+            return null;
+        }
     }
 
     public String getWinner() {
@@ -21,6 +30,13 @@ public class BoardDTO {
     }
 
     public void setBoard(String[][] board) {
-        this.board = board;
+        if (board != null) {
+            this.board = board.clone();
+            for (int i = 0; i < this.board.length; i++) {
+                this.board[i] = this.board[i].clone();
+            }
+        } else {
+            this.board = null;
+        }
     }
 }

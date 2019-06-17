@@ -55,6 +55,7 @@ public class GameServiceImplTest {
         currentState[1][5] = Optional.of(Player.PLAYER1);
         currentState[1][6] = Optional.of(Player.PLAYER1);
         currentState[1][7] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkState(board);
@@ -90,6 +91,7 @@ public class GameServiceImplTest {
         currentState[1][5] = Optional.of(Player.PLAYER1);
         currentState[1][6] = Optional.of(Player.PLAYER1);
         currentState[1][7] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkStraightSequences(board);
@@ -113,6 +115,7 @@ public class GameServiceImplTest {
         currentState[2][5] = Optional.of(Player.PLAYER1);
         currentState[2][7] = Optional.of(Player.PLAYER1);
         currentState[2][9] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         //when
         winner = gameService.checkStraightSequences(board);
@@ -132,6 +135,7 @@ public class GameServiceImplTest {
         currentState[7][5] = Optional.of(Player.PLAYER1);
         currentState[8][5] = Optional.of(Player.PLAYER1);
         currentState[9][5] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         //when
         winner = gameService.checkStraightSequences(board);
@@ -155,6 +159,7 @@ public class GameServiceImplTest {
         currentState[7][7] = Optional.of(Player.PLAYER1);
         currentState[8][8] = Optional.of(Player.PLAYER1);
         currentState[9][9] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkStraightSequences(board);
@@ -181,6 +186,7 @@ public class GameServiceImplTest {
         currentState[5][5] = Optional.of(Player.PLAYER1);
         currentState[5][6] = Optional.of(Player.PLAYER1);
         currentState[5][7] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkStraightSequences(board);
@@ -203,6 +209,7 @@ public class GameServiceImplTest {
         currentState[3][7] = Optional.of(Player.PLAYER2);
         currentState[4][8] = Optional.of(Player.PLAYER2);
         currentState[5][9] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -224,6 +231,7 @@ public class GameServiceImplTest {
         currentState[3][7] = Optional.of(Player.PLAYER2);
         currentState[4][8] = Optional.of(Player.PLAYER2);
         currentState[5][9] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -243,6 +251,7 @@ public class GameServiceImplTest {
         currentState[7][2] = Optional.of(Player.PLAYER2);
         currentState[8][3] = Optional.of(Player.PLAYER2);
         currentState[9][4] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -265,6 +274,7 @@ public class GameServiceImplTest {
         currentState[6][7] = Optional.of(Player.PLAYER2);
         currentState[7][8] = Optional.of(Player.PLAYER2);
         currentState[8][9] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -285,6 +295,7 @@ public class GameServiceImplTest {
         currentState[3][5] = Optional.of(Player.PLAYER2);
         currentState[4][4] = Optional.of(Player.PLAYER2);
         currentState[5][3] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -308,6 +319,7 @@ public class GameServiceImplTest {
         currentState[6][2] = Optional.of(Player.PLAYER2);
         currentState[7][1] = Optional.of(Player.PLAYER2);
         currentState[8][0] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -327,6 +339,7 @@ public class GameServiceImplTest {
         currentState[6][6] = Optional.of(Player.PLAYER2);
         currentState[7][5] = Optional.of(Player.PLAYER2);
         currentState[8][4] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -348,6 +361,7 @@ public class GameServiceImplTest {
         currentState[7][4] = Optional.of(Player.PLAYER2);
         currentState[8][3] = Optional.of(Player.PLAYER2);
         currentState[9][2] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -369,6 +383,7 @@ public class GameServiceImplTest {
         currentState[6][6] = Optional.of(Player.PLAYER2);
         currentState[7][7] = Optional.of(Player.PLAYER2);
         currentState[8][8] = Optional.of(Player.PLAYER2);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
@@ -391,6 +406,7 @@ public class GameServiceImplTest {
         currentState[4][5] = Optional.of(Player.PLAYER1);
         currentState[5][4] = Optional.of(Player.PLAYER1);
         currentState[6][3] = Optional.of(Player.PLAYER1);
+        board.setBoard(currentState);
 
         // when
         winner = gameService.checkDiagonalsSequences(board);
